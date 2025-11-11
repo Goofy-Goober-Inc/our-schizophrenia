@@ -52,6 +52,9 @@ const Main = () => {
 
   const sendMessageOnClick = () => {
     auth ? sendMessage(JSON.stringify({"username":username, "message":message})) : null
+    const messageInput = document.getElementById("message") as HTMLInputElement | null;
+    if (messageInput) messageInput.value = "";
+    setMessage("")
     }
 
   return (
