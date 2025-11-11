@@ -61,8 +61,8 @@ const Main = () => {
         <h1>Auth: {auth === true ? "true" : "false"}</h1>
         { auth === true ? (
         <div className='send-form'>
-          <input type="text" name="message" id="message" placeholder='message' onChange={(e) => {setMessage(e.target.value)}}/>
-          <button onClick={sendMessageOnClick}>Send</button>
+          <input type="text" name="message" id="message" placeholder='message' onChange={(e) => {setMessage(e.target.value)}} onKeyUp={(e) => {if(e.key === "Enter") sendMessageOnClick()}}/>
+          <button onClick={sendMessageOnClick} id='sendButton'>Send</button>
         </div>
         ) : null}
         <div id='chat'></div>
