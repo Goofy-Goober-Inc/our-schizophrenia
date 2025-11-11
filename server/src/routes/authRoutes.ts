@@ -1,4 +1,4 @@
-import { Elysia, file } from 'elysia'
+import { Elysia, file, redirect } from 'elysia'
 import { indexHTMLpath } from '../index';
 import { jwt } from "@elysiajs/jwt"
 import Database from 'bun:sqlite';
@@ -51,6 +51,16 @@ const authRoutes = new Elysia()
     return {
       username: user.username
     }
+  })
+  .get("/logout", ({cookie: {auth}}) => {
+    auth.set({
+      value: "",
+      httpOnly: true,
+      maxAge: 0,
+      path: "/"
+    })
+
+    return redirect("/login")
   })
 
 export default authRoutes;
