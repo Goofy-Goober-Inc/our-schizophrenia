@@ -1,21 +1,34 @@
 import useWebSocket from 'react-use-websocket'
-import { useCallback } from 'react'
+import { useState } from 'react'
 import './Main.css'
 
 const Main = () => {
-  const socketURL = "ws://localhost:3000/chat";
+  const [message, setMessage] = useState("");
+
+  const socketURL = "ws://192.168.137.22:3000/chat";
   const { sendMessage } = useWebSocket(socketURL, {
     onOpen: () => console.log('Connected'),
+    onMessage: (msg) => {
+      let chat = document.getElementById('chat')
+
+      let p = document.createElement('p');
+      p.textContent = msg.data;
+
+      chat?.appendChild(p);
+    },
   });
 
-  const sendMessageOnClick = useCallback(() => sendMessage('Hello'), [])
+  const sendMessageOnClick = () => sendMessage(message)
 
   return (
     <>
       <section>
         <h1>HAHAHA</h1>
-        <button onClick={sendMessageOnClick}>Say Hello to server</button>
-        <div id="shit"></div>
+        <div>
+          <input type="text" name="message" id="message" onChange={(e) => {setMessage(e.target.value)}}/>
+          <button onClick={sendMessageOnClick}>Send</button>
+        </div>
+        <div id='chat'></div>
       </section>
     </>
   )

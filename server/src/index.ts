@@ -13,7 +13,7 @@ const app = new Elysia()
   }))
   .use(authRoutes)
   .ws("/chat", {
-    body: t.String(),
+    body: t.Any(),
     response: t.Any(),
     open(ws) {
       console.log("Connected")
