@@ -1,12 +1,31 @@
 import useWebSocket from 'react-use-websocket'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './Main.css'
 
 const Main = () => {
   const [username, setUsername] = useState("");
   const [message, setMessage] = useState("");
 
-  const socketURL = "ws://172.20.10.3:3000/chat";
+  useEffect(() => {
+    let chat = document.getElementById('chat')
+
+    const fetchMessages = async () => {
+      const response = await fetch("/message")
+      const data = await response.json();
+
+      data.forEach((msg: any) => {
+        let p = document.createElement('p');
+        p.textContent = `${msg.username}: ${msg.message}`;
+
+        chat?.appendChild(p);
+      })
+    }
+
+    fetchMessages();
+
+  }, [])
+
+  const socketURL = `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/chat`;
   const { sendMessage } = useWebSocket(socketURL, {
     onOpen: () => console.log('Connected'),
     onMessage: (msg) => {
