@@ -3,3 +3,60 @@ section {
   flex-direction: column !important;
   gap: 1em !important;
 }
+
+.send-form {
+  display: flex;
+  flex-direction: row !important;
+  gap: 1em;
+}
+
+.send-form > input {
+  padding: 1em;
+  border-radius: 10px;
+  border: none;
+}
+
+.send-form > button {
+  padding: 1em;
+  border-radius: 10px;
+  border: none;
+  background: #FFC8DD;
+  color: green;
+  font-weight: 900;
+  cursor: pointer;
+  transition: ease-in-out 1000ms;
+}
+
+.send-form > button:hover {
+  transform: rotate(360deg);
+  transition: ease-in-out 1000ms;
+}
+
+#chat {
+  width: 500px;
+  overflow-y: scroll;
+  height: 500px;
+  background: #FFC8DD;
+  border-radius: 10px;
+  padding: .5em;
+}
+
+#chat::-webkit-scrollbar {
+  display: none;
+}
+
+#chat > p {
+  font-weight: 900;
+  font-size: x-large;
+  max-width: 500px;
+}
+
+/* delete thsi later */
+@media (max-width: 520px) {
+  #chat {
+    width: 300px;
+  }
+  .send-form {
+    flex-direction: column !important;
+  }
+}

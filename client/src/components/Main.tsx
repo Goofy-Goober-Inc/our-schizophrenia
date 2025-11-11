@@ -3,6 +3,7 @@ import { useState } from 'react'
 import './Main.css'
 
 const Main = () => {
+  const [username, setUsername] = useState("");
   const [message, setMessage] = useState("");
 
   const socketURL = "ws://192.168.137.22:3000/chat";
@@ -12,20 +13,21 @@ const Main = () => {
       let chat = document.getElementById('chat')
 
       let p = document.createElement('p');
-      p.textContent = msg.data;
+      p.textContent = `${JSON.parse(msg.data).username}: ${JSON.parse(msg.data).message}`;
 
       chat?.appendChild(p);
     },
   });
 
-  const sendMessageOnClick = () => sendMessage(message)
+  const sendMessageOnClick = () => sendMessage(JSON.stringify({"username":username, "message":message}))
 
   return (
     <>
       <section>
         <h1>HAHAHA</h1>
-        <div>
-          <input type="text" name="message" id="message" onChange={(e) => {setMessage(e.target.value)}}/>
+        <div className='send-form'>
+          <input type="text" name="username" id="username" placeholder='username' onChange={(e) => {setUsername(e.target.value)}}/>
+          <input type="text" name="message" id="message" placeholder='message' onChange={(e) => {setMessage(e.target.value)}}/>
           <button onClick={sendMessageOnClick}>Send</button>
         </div>
         <div id='chat'></div>
