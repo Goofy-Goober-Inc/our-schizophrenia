@@ -1,13 +1,23 @@
 import useWebSocket from 'react-use-websocket'
 import { useState, useEffect } from 'react'
-import './Main.css'
+import './Chat.css'
 
 const Main = () => {
   const [username, setUsername] = useState("");
   const [message, setMessage] = useState("");
+  const [auth, setAuth] = useState(false);
 
   useEffect(() => {
     let chat = document.getElementById('chat')
+    
+    const isAuthorized = async () => {
+      const response = await fetch("/user");
+      const data = await response.json();
+      const username = data.username
+      setUsername(username);
+
+      setAuth((response.status == 401) ? false : true);
+    }
 
     const fetchMessages = async () => {
       const response = await fetch("/message")
@@ -21,6 +31,7 @@ const Main = () => {
       })
     }
 
+    isAuthorized();
     fetchMessages();
 
   }, [])
@@ -39,17 +50,21 @@ const Main = () => {
     },
   });
 
-  const sendMessageOnClick = () => sendMessage(JSON.stringify({"username":username, "message":message}))
+  const sendMessageOnClick = () => {
+    auth ? sendMessage(JSON.stringify({"username":username, "message":message})) : null
+    }
 
   return (
     <>
       <section>
-        <h1>HAHAHA</h1>
+        <h1>Username: {username}</h1>
+        <h1>Auth: {auth === true ? "true" : "false"}</h1>
+        { auth === true ? (
         <div className='send-form'>
-          <input type="text" name="username" id="username" placeholder='username' onChange={(e) => {setUsername(e.target.value)}}/>
           <input type="text" name="message" id="message" placeholder='message' onChange={(e) => {setMessage(e.target.value)}}/>
           <button onClick={sendMessageOnClick}>Send</button>
         </div>
+        ) : null}
         <div id='chat'></div>
       </section>
     </>

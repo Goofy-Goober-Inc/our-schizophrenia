@@ -2,7 +2,7 @@ import './App.css'
 import Navbar from './components/Navbar'
 import Login from './components/Login'
 import Register from './components/Register'
-import Main from './components/Main'
+import Chat from './components/Chat'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route path='/' element={<Main />} />
+          <Route path='/' element={<Chat />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
         </Routes>

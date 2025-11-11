@@ -8,15 +8,13 @@ const Register = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    const res = await fetch('/register', {
+    await fetch('/api/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ username, password })
     })
-
-    console.log(res);
   }
 
   return (
