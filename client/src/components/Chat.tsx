@@ -2,17 +2,38 @@ import useWebSocket from 'react-use-websocket'
 import { useState, useEffect } from 'react'
 import './Chat.css'
 
+type Msg = {
+  username: String,
+  message: String,
+  image: URL | String
+  }
+
 const Main = () => {
   const [username, setUsername] = useState("");
   const [message, setMessage] = useState("");
-  const [imageUri, setImageUri] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [auth, setAuth] = useState(false);
 
-  // const isImageURI = async (imgURI: any) => {
-  //   const response = await fetch(imgURI)
-  //   if (response.status === 404) imgURI = "";
-  //   return imgURI;
-  //   }
+  const showMessages = (msg: Msg, chat: HTMLElement | null) => {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message'
+
+    let p = document.createElement('p');
+    p.textContent = `${msg.username}: ${msg.message}`;
+    
+    messageDiv.appendChild(p);
+    
+    if (msg.image !== null) {
+      let img = document.createElement('img')
+      img.src = `${msg.image}`;
+      img.className = 'image'
+      messageDiv.appendChild(img);
+      }
+
+
+    chat?.appendChild(messageDiv)
+    chat?.scrollTo(0, chat.scrollHeight)
+    }
 
   useEffect(() => {
     let chat = document.getElementById('chat')
@@ -24,31 +45,14 @@ const Main = () => {
       setUsername(username);
 
       setAuth((response.status == 401) ? false : true);
-    }
+      }
 
     const fetchMessages = async () => {
       const response = await fetch("/message")
       const data = await response.json();
 
-      data.forEach((msg: any) => {
-        // msg.image = isImageURI(msg.image);
-        const messageDiv = document.createElement('div');
-        messageDiv.className = 'message'
-
-        let img = document.createElement('img')
-        img.src = `${msg.image}`;
-        img.className = 'image'
-
-        let p = document.createElement('p');
-        p.textContent = `${msg.username}: ${msg.message}`;
-
-        messageDiv.appendChild(p);
-        if (msg.image !== '') messageDiv.appendChild(img)
-
-        chat?.appendChild(messageDiv)
-        chat?.scrollTo(0, chat.scrollHeight)
-      })
-    }
+      data.forEach((msg: Msg) => { showMessages(msg, chat) })
+      }
 
     isAuthorized();
     fetchMessages();
@@ -60,34 +64,21 @@ const Main = () => {
     onOpen: () => console.log('Connected'),
     onMessage: (msg) => {
       let chat = document.getElementById('chat')
-      let messageDiv = document.createElement('div')
-      messageDiv.className = 'message'
-
-      // let imageURI = isImageURI(JSON.parse(msg.data).image);
-
-      let p = document.createElement('p');
-      p.textContent = `${JSON.parse(msg.data).username}: ${JSON.parse(msg.data).message}`;
-
-      let img = document.createElement('img')
-      img.src = `${JSON.parse(msg.data).image}`;
-      img.className = 'image'
-
-      messageDiv.appendChild(p);
-      if (JSON.parse(msg.data).image !== "") messageDiv.appendChild(img);
-
-      chat?.appendChild(messageDiv);
-      chat?.scrollTo(0, chat.scrollHeight)
-    },
-  });
+      showMessages(JSON.parse(msg.data), chat)
+      }
+    });
 
   const sendMessageOnClick = () => {
-    auth ? sendMessage(JSON.stringify({"username":username, "message":message, "image":imageUri})) : null
+    auth ? sendMessage(JSON.stringify({"username":username, "message":message, "image":imageUrl})) : null
+
     const messageInput = document.getElementById("message") as HTMLInputElement | null;
-    if (messageInput) messageInput.value = "";
     const imageInput = document.getElementById("image") as HTMLInputElement | null;
+
+    if (messageInput) messageInput.value = "";
     if (imageInput) imageInput.value = "";
+
     setMessage("")
-    setImageUri("")
+    setImageUrl("")
     }
 
   return (
@@ -97,8 +88,22 @@ const Main = () => {
         <h1>Auth: {auth === true ? "true" : "false"}</h1>
         { auth === true ? (
         <div className='send-form'>
-          <input type="text" name="message" id="message" placeholder='message' onChange={(e) => {setMessage(e.target.value)}} onKeyUp={(e) => {if(e.key === "Enter") sendMessageOnClick()}}/>
-          <input type="text" name="image" id="image" placeholder='IMG URI' onChange={(e) => {setImageUri(e.target.value)}} onKeyUp={(e) => {if(e.key === "Enter") sendMessageOnClick()}}/>
+          <input
+            type="text"
+            name="message"
+            id="message"
+            placeholder='message'
+            onChange={(e) => {setMessage(e.target.value)}}
+            onKeyUp={(e) => {if(e.key === "Enter") sendMessageOnClick()}}
+          />
+          <input
+            type="text"
+            name="image"
+            id="image"
+            placeholder='image url'
+            onChange={(e) =>{setImageUrl(e.target.value)}}
+            onKeyUp={(e) => {if(e.key === "Enter") sendMessageOnClick()}}
+          />
           <button onClick={sendMessageOnClick} id='sendButton'>Send</button>
         </div>
         ) : null}

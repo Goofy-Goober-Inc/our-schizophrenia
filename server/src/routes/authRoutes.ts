@@ -16,14 +16,14 @@ const authRoutes = new Elysia()
   .get("/register", () => file(indexHTMLpath))
   .post("/api/register", ({ body }) => {
     const { username, password } = body as Record<string, string>;
-    console.log(`Registered user: ${username}\nPassword: ${password}`);
+    console.log(`Registered user: ${username}\nPassword: ${password}`); // uga buga
   })
   .post("/api/login", async ({body, jwt, cookie: { auth }}) => {
     const { username, password } = body as Record<string, string>;
-    console.log(`Login attempt:\nUsername: ${username}\nPassword: ${password}`);
 
     query = db.query("SELECT * FROM user WHERE username=?1");
     let result: any = query.get(username);
+
     if(result && result.password === password) {
       console.log(result)
       const value = await jwt.sign({

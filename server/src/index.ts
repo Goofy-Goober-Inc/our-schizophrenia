@@ -2,9 +2,10 @@ import { Elysia, file, t } from "elysia";
 import { staticPlugin } from "@elysiajs/static"
 import Database from "bun:sqlite";
 import authRoutes from "./routes/authRoutes"
+import { ServerWebSocket } from "bun";
 
 export const indexHTMLpath = `${__dirname}/../../client/dist/index.html`;
-const room = new Set<WebSocket>();
+const room = new Set<ServerWebSocket>();
 
 const db = new Database("db.db", { create: true});
 let query = db.query("CREATE TABLE IF NOT EXISTS message(id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR, message VARCHAR, image VARCHAR);")
@@ -25,8 +26,10 @@ const app = new Elysia()
     },
     message(ws, message) {
       console.log(message)
-      const re = new RegExp("(?:http|https)\:\/\/.+")
-      if (re.test(message.image) === false) message.image = "";
+
+      const re = /(?:http|https)\:\/\/.+/
+      if (re.test(message.image) === false) message.image = null;
+
       query = db.query(`INSERT INTO message("username", "message", "image") VALUES($username, $message, $image);`)
       query.run({
         $username: message.username,
