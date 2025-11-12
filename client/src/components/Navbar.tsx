@@ -23,7 +23,7 @@ const Navbar = () => {
       <div className='links'>
         { auth ? <p>{username}</p> : null }
         <a href={auth ? "/logout" : "/login"}>{auth ? "Logout" : "Login"}</a>
-        <a href="/register">Register</a>
+        { auth ? null : <a href="/register">Register</a> }
       </div>
     </div>
   )

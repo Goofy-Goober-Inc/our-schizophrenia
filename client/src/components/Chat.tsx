@@ -74,7 +74,7 @@ const Main = () => {
       try {
         showMessages(JSON.parse(msg.data), chat)
         if (Notification?.permission === "granted" && !(document.hasFocus())) {
-          new Notification(`${JSON.parse(msg.data).username}: ${JSON.parse(msg.data).message} ${JSON.parse(msg.data).image === null ? null : "<image>"}`)
+          new Notification(`${JSON.parse(msg.data).username}: ${JSON.parse(msg.data).message} ${JSON.parse(msg.data).image === null ? "" : "<image>"}`)
         }
       } catch(e) {
         console.log(e);
