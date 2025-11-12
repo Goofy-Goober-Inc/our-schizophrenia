@@ -39,6 +39,10 @@ const Main = () => {
     }
 
   useEffect(() => {
+    Notification.requestPermission().then((result) => {
+      console.log(result);
+    });
+
     let chat = document.getElementById('chat')
     
     const isAuthorized = async () => {
@@ -69,6 +73,9 @@ const Main = () => {
       let chat = document.getElementById('chat')
       try {
         showMessages(JSON.parse(msg.data), chat)
+        if (Notification?.permission === "granted" && !(document.hasFocus())) {
+          new Notification(`${JSON.parse(msg.data).username}: ${JSON.parse(msg.data).message} ${JSON.parse(msg.data).image === null ? null : "<image>"}`)
+        }
       } catch(e) {
         console.log(e);
       }
