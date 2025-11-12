@@ -20,8 +20,8 @@ const Main = () => {
       .then(data => {
         let availableEmotes = data.availableEmotes;
         return msg.replace(/:[^:\s]+:/g, emote => {
-          return availableEmotes.includes(`${emote.replaceAll(":", "")}.png`) ?
-            `<img src="/emotes/${emote.replaceAll(":", "")}.png" />` : `${emote}`;
+          return availableEmotes.includes(`${emote.replaceAll(":", "")}.webp`) ?
+            `<img src="/emotes/${emote.replaceAll(":", "")}.webp" />` : `${emote}`;
         })
       })
   }
