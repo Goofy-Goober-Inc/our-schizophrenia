@@ -7,7 +7,7 @@ export const indexHTMLpath = `${__dirname}/../../client/dist/index.html`;
 const room = new Set<WebSocket>();
 
 const db = new Database("db.db", { create: true});
-let query = db.query("CREATE TABLE IF NOT EXISTS message(id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR, message VARCHAR);")
+let query = db.query("CREATE TABLE IF NOT EXISTS message(id INTEGER PRIMARY KEY AUTOINCREMENT, username VARCHAR, message VARCHAR, image VARCHAR);")
 query.run();
 
 const app = new Elysia()
@@ -25,10 +25,13 @@ const app = new Elysia()
     },
     message(ws, message) {
       console.log(message)
-      query = db.query(`INSERT INTO message("username", "message") VALUES($username, $message);`)
+      const re = new RegExp("(?:http|https)\:\/\/.+")
+      if (re.test(message.image) === false) message.image = "";
+      query = db.query(`INSERT INTO message("username", "message", "image") VALUES($username, $message, $image);`)
       query.run({
         $username: message.username,
-        $message: message.message
+        $message: message.message,
+        $image: message.image
       });
 
       for (const client of room) client.send(message)

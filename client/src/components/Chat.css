@@ -45,7 +45,7 @@ section {
   display: none;
 }
 
-#chat > p {
+.message > p {
   font-weight: 900;
   font-size: x-large;
   max-width: 500px;
@@ -59,4 +59,9 @@ section {
   .send-form {
     flex-direction: column !important;
   }
+}
+
+.image {
+  max-width: 400px;
+  max-height: 400px;
 }
