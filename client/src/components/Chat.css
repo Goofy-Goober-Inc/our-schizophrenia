@@ -53,6 +53,10 @@ section {
   max-width: 500px;
 }
 
+.message img {
+  vertical-align: middle;
+}
+
 .image {
   max-width: 400px;
   max-height: 400px;

@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react'
 import './Chat.css'
 
 type Msg = {
-  username: String,
-  message: String,
+  username: string,
+  message: string,
   image: URL | String
   }
 
@@ -14,12 +14,32 @@ const Main = () => {
   const [imageUrl, setImageUrl] = useState("");
   const [auth, setAuth] = useState(false);
 
+  const replaceEmotes = (msg: string) => {
+    return fetch("/api/emotes")
+      .then(res => res.json())
+      .then(data => {
+        let availableEmotes = data.availableEmotes;
+        return msg.replace(/:[^:\s]+:/g, emote => {
+          return availableEmotes.includes(`${emote.replaceAll(":", "")}.png`) ?
+            `<img src="/emotes/${emote.replaceAll(":", "")}.png" />` : `${emote}`;
+        })
+      })
+  }
+
   const showMessages = (msg: Msg, chat: HTMLElement | null) => {
     const messageDiv = document.createElement('div');
     messageDiv.className = 'message'
 
+    msg.message = msg.message.replace(/(?<=\s|^)@[^@\s]+(?=\s|$)/g, mention => {
+      return `<span style="color: blue !important;">${mention}</span>`
+    })
+    
+    // msg.message = msg.message.replace(/(?<=\s|^):[^:\s]+:(?=\s|$)/g, emote => {
+    //   return isEmoteAvailable(emote) ? "true" : "false";
+    // })
+
     let p = document.createElement('p');
-    p.textContent = `${msg.username}: ${msg.message}`;
+    p.innerHTML = `${msg.username}: ${msg.message}`;
     
     messageDiv.appendChild(p);
     
@@ -36,7 +56,11 @@ const Main = () => {
 
     chat.appendChild(messageDiv)
     chat.scrollTo(0, chat.scrollHeight)
-    }
+
+    replaceEmotes(msg.message).then(newMsg => {
+      p.innerHTML = `${msg.username}: ${newMsg}`;
+    })
+  }
 
   useEffect(() => {
     Notification.requestPermission().then((result) => {
@@ -55,7 +79,7 @@ const Main = () => {
       }
 
     const fetchMessages = async () => {
-      const response = await fetch("/message")
+      const response = await fetch("/api/message")
       const data = await response.json();
 
       data.forEach((msg: Msg) => { showMessages(msg, chat) })
@@ -73,6 +97,7 @@ const Main = () => {
       let chat = document.getElementById('chat')
       try {
         showMessages(JSON.parse(msg.data), chat)
+
         if (Notification?.permission === "granted" && !(document.hasFocus())) {
           new Notification(`${JSON.parse(msg.data).username}: ${JSON.parse(msg.data).message} ${JSON.parse(msg.data).image === null ? "" : "<image>"}`)
         }
