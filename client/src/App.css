@@ -10,17 +10,6 @@
     font-style: normal;
 }
 
-a {
-    color: green;
-    text-decoration: none;
-    font-size: xx-large;
-}
-
-a:hover {
-    color: greenyellow;
-    transition: ease-in-out 100ms;
-}
-
 section {
   min-height: 100dvh;
   display: flex;

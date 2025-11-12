@@ -7,13 +7,15 @@ section {
 .send-form {
   display: flex;
   flex-direction: row !important;
-  gap: 1em;
+  gap: .5em;
+  margin-top: .5em;
 }
 
 .send-form > input {
   padding: 1em;
   border-radius: 10px;
   border: none;
+  flex: 1;
 }
 
 .send-form > button {
@@ -51,17 +53,36 @@ section {
   max-width: 500px;
 }
 
-/* delete thsi later */
-@media (max-width: 520px) {
-  #chat {
-    width: 300px;
-  }
-  .send-form {
-    flex-direction: column !important;
-  }
-}
-
 .image {
   max-width: 400px;
   max-height: 400px;
+}
+
+/* delete thsi later */
+/* no */
+@media screen and (max-width: 520px) {
+  #chat {
+    width: 300px;
+  }
+
+  .send-form {
+    flex-direction: column !important;
+  }
+
+  .image {
+    max-width: 200px;
+    max-height: 200px;
+  }
+}
+
+@media screen and (max-height: 845px) {
+  #chat {
+    height: 300px;
+  }
+}
+
+@media screen and (max-height: 485px) {
+  #chat {
+    height: 150px;
+  }
 }

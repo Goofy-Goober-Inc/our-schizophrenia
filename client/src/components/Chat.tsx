@@ -28,11 +28,14 @@ const Main = () => {
       img.src = `${msg.image}`;
       img.className = 'image'
       messageDiv.appendChild(img);
-      }
+    }
 
+    if(!chat) {
+      throw new Error("Chat div wasnt found.") // did it for fun
+    }
 
-    chat?.appendChild(messageDiv)
-    chat?.scrollTo(0, chat.scrollHeight)
+    chat.appendChild(messageDiv)
+    chat.scrollTo(0, chat.scrollHeight)
     }
 
   useEffect(() => {
@@ -64,8 +67,12 @@ const Main = () => {
     onOpen: () => console.log('Connected'),
     onMessage: (msg) => {
       let chat = document.getElementById('chat')
-      showMessages(JSON.parse(msg.data), chat)
+      try {
+        showMessages(JSON.parse(msg.data), chat)
+      } catch(e) {
+        console.log(e);
       }
+    }
     });
 
   const sendMessageOnClick = () => {
@@ -84,30 +91,30 @@ const Main = () => {
   return (
     <>
       <section>
-        <h1>Username: {username}</h1>
-        <h1>Auth: {auth === true ? "true" : "false"}</h1>
-        { auth === true ? (
-        <div className='send-form'>
-          <input
-            type="text"
-            name="message"
-            id="message"
-            placeholder='message'
-            onChange={(e) => {setMessage(e.target.value)}}
-            onKeyUp={(e) => {if(e.key === "Enter") sendMessageOnClick()}}
-          />
-          <input
-            type="text"
-            name="image"
-            id="image"
-            placeholder='image url'
-            onChange={(e) =>{setImageUrl(e.target.value)}}
-            onKeyUp={(e) => {if(e.key === "Enter") sendMessageOnClick()}}
-          />
-          <button onClick={sendMessageOnClick} id='sendButton'>Send</button>
+        <div>
+          <div id='chat'></div>
+          { auth === true ? (
+          <div className='send-form'>
+            <input
+              type="text"
+              name="message"
+              id="message"
+              placeholder='message'
+              onChange={(e) => {setMessage(e.target.value)}}
+              onKeyUp={(e) => {if(e.key === "Enter") sendMessageOnClick()}}
+            />
+            <input
+              type="text"
+              name="image"
+              id="image"
+              placeholder='image url'
+              onChange={(e) =>{setImageUrl(e.target.value)}}
+              onKeyUp={(e) => {if(e.key === "Enter") sendMessageOnClick()}}
+            />
+            <button onClick={sendMessageOnClick} id='sendButton'>Send</button>
+          </div>
+          ) : null}
         </div>
-        ) : null}
-        <div id='chat'></div>
       </section>
     </>
   )
