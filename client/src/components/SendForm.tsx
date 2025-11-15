@@ -17,7 +17,7 @@ const replaceEmotes = (msg: string) => {
   //     `<img src="/emotes/${emote.replaceAll(":", "")}.${emote.split(".")[1]}" />` : `${emote}`;
   // })
   return msg.replace(/:[^:\s]+:/g, emote => {
-    console.log(emoteCache[emote.replaceAll(":", "")])
+    // console.log(emoteCache[emote.replaceAll(":", "")])
     return `<img src="${emoteCache[emote.replaceAll(":", "")]}" />`
   })
 }
@@ -78,7 +78,7 @@ const SendForm = () => {
 
       if(data) {
         emoteCache = data;
-        console.log(emoteCache)
+        // console.log(emoteCache)
         return data;
       }
     }
