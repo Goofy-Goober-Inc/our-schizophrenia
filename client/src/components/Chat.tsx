@@ -1,6 +1,8 @@
 import useWebSocket from 'react-use-websocket'
 import { useState, useEffect } from 'react'
 import './Chat.css'
+import './EmojiMenu'
+import EmojiMenu from './EmojiMenu'
 
 type Msg = {
   username: string,
@@ -126,24 +128,28 @@ const Main = () => {
         <div>
           <div id='chat'></div>
           { auth === true ? (
-          <div className='send-form'>
-            <input
-              type="text"
-              name="message"
-              id="message"
-              placeholder='message'
-              onChange={(e) => {setMessage(e.target.value)}}
-              onKeyUp={(e) => {if(e.key === "Enter") sendMessageOnClick()}}
-            />
-            <input
-              type="text"
-              name="image"
-              id="image"
-              placeholder='image url'
-              onChange={(e) =>{setImageUrl(e.target.value)}}
-              onKeyUp={(e) => {if(e.key === "Enter") sendMessageOnClick()}}
-            />
-            <button onClick={sendMessageOnClick} id='sendButton'>Send</button>
+          <div>
+            <div className='send-form'>
+              <input
+                type="text"
+                name="message"
+                id="message"
+                placeholder='message'
+                value={message}
+                onChange={(e) => {setMessage(e.target.value)}}
+                onKeyUp={(e) => {if(e.key === "Enter") sendMessageOnClick()}}
+              />
+              <input
+                type="text"
+                name="image"
+                id="image"
+                placeholder='image url'
+                onChange={(e) =>{setImageUrl(e.target.value)}}
+                onKeyUp={(e) => {if(e.key === "Enter") sendMessageOnClick()}}
+              />
+              <button onClick={sendMessageOnClick} id='sendButton'>Send</button>
+            </div>
+            <EmojiMenu setMessage={setMessage} />
           </div>
           ) : null}
         </div>

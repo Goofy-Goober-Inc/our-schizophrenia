@@ -1,0 +1,8 @@
+#emojiMenu {
+    display: flex;
+    background: #FFC8DD;
+    padding: .5em;
+    width: 500px;
+    margin-top: .5em;
+    border-radius: 10px;
+}
