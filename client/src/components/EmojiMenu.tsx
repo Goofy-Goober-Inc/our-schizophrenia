@@ -12,11 +12,11 @@ const EmoteMenu = ({ setMessage }: EmojiMenuProps) => {
     const availableEmotesDiv = document.createElement('div')
     availableEmotesDiv.className = "availableEmotes"
 
-    emoteCache.forEach(emote => {
+    Object.entries(emoteCache).forEach(([key, value]) => {
       const imgEmoteElement: HTMLImageElement = document.createElement('img')
-      imgEmoteElement.src = `/emotes/${emote}`
+      imgEmoteElement.src = value
       imgEmoteElement.onclick = () => {
-        setMessage((prevMsg) => prevMsg + `:${emote.split(".")[0]}:`)
+        setMessage((prevMsg) => prevMsg + `:${key}:`)
       }
       availableEmotesDiv.appendChild(imgEmoteElement);
     })

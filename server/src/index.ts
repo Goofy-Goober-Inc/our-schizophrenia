@@ -3,7 +3,7 @@ import { staticPlugin } from "@elysiajs/static"
 import Database from "bun:sqlite";
 import authRoutes from "./routes/authRoutes"
 import { ServerWebSocket } from "bun";
-import { readdirSync } from "fs"
+import { readFileSync } from "fs"
 
 export const indexHTMLpath = `${__dirname}/../../client/dist/index.html`;
 const room = new Set<ServerWebSocket>();
@@ -47,10 +47,9 @@ const app = new Elysia()
     return query.all().reverse();
   })
   .get("/api/emotes", () => {
-    let availableEmotes = readdirSync(`${__dirname}/../../client/dist/emotes`);
-    return {
-      availableEmotes
-    };
+    // let availableEmotes = readdirSync(`${__dirname}/../../client/dist/emotes`);
+    let availableEmotes = JSON.parse(readFileSync("./src/emotes.json", "utf-8"))
+    return JSON.stringify(availableEmotes)
   })
   .listen(3000);
 

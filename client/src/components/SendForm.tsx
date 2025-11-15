@@ -9,12 +9,16 @@ type Msg = {
   image: URL | String
 }
 
-export let emoteCache: Array<string> = []
+export let emoteCache: Record<string, string> = {};
 
 const replaceEmotes = (msg: string) => {
+  // return msg.replace(/:[^:\s]+:/g, emote => {
+  //   return emoteCache.includes(`${emote.replaceAll(":", "")}.${emote.split(".")[1]}`) ?
+  //     `<img src="/emotes/${emote.replaceAll(":", "")}.${emote.split(".")[1]}" />` : `${emote}`;
+  // })
   return msg.replace(/:[^:\s]+:/g, emote => {
-    return emoteCache.includes(`${emote.replaceAll(":", "")}.webp`) ?
-      `<img src="/emotes/${emote.replaceAll(":", "")}.webp" />` : `${emote}`;
+    console.log(emoteCache[emote.replaceAll(":", "")])
+    return `<img src="${emoteCache[emote.replaceAll(":", "")]}" />`
   })
 }
 
@@ -67,15 +71,15 @@ const SendForm = () => {
     }
 
     const fetchEmotes = async () => {
-      if (emoteCache.length > 0) return emoteCache;
+      if (Object.keys(emoteCache).length > 0) return emoteCache;
 
       const res = await fetch("/api/emotes");
       const data = await res.json();
 
       if(data) {
-        emoteCache = data.availableEmotes;
+        emoteCache = data;
         console.log(emoteCache)
-        return data.availableEmotes;
+        return data;
       }
     }
 
