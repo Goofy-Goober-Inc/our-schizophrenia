@@ -1,9 +1,11 @@
 import { Elysia, file, t } from "elysia";
+import { jwt } from "@elysiajs/jwt"
 import { staticPlugin } from "@elysiajs/static"
 import Database from "bun:sqlite";
 import authRoutes from "./routes/authRoutes"
 import { ServerWebSocket } from "bun";
 import { readFileSync } from "fs"
+import { addEmote } from "./addEmote";
 
 export const indexHTMLpath = `${__dirname}/../../client/dist/index.html`;
 const room = new Set<ServerWebSocket>();
@@ -46,10 +48,19 @@ const app = new Elysia()
     query = db.query("SELECT * FROM message ORDER BY id DESC LIMIT 10;");
     return query.all().reverse();
   })
-  .get("/api/emotes", () => {
+  .get("/emote", ({ jwt, status, cookie: {auth}}) => {
+    if(!auth.value) return status(401);
+    return file(indexHTMLpath)
+  })
+  .get("/api/emote", () => {
     // let availableEmotes = readdirSync(`${__dirname}/../../client/dist/emotes`);
     let availableEmotes = JSON.parse(readFileSync("./src/emotes.json", "utf-8"))
     return JSON.stringify(availableEmotes)
+  })
+  .post("/api/emote", ({ body, jwt, status, cookie: {auth}}) => {
+    if(!auth.value) return status(401);
+    const { emoteName, emoteUrl } = body as Record<string, string>;
+    addEmote(emoteName, emoteUrl)
   })
   .listen(3000);
 

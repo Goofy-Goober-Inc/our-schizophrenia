@@ -73,7 +73,7 @@ const SendForm = () => {
     const fetchEmotes = async () => {
       if (Object.keys(emoteCache).length > 0) return emoteCache;
 
-      const res = await fetch("/api/emotes");
+      const res = await fetch("/api/emote");
       const data = await res.json();
 
       if(data) {
