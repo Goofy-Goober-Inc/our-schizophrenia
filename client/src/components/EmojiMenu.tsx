@@ -13,7 +13,7 @@ const EmojiMenu = ({ setMessage }: EmojiMenuProps) => {
         .then(data => {
           const emojiMenu = document.getElementById('emojiMenu')
           const availableEmotesDiv = document.createElement('div')
-          availableEmotesDiv.style = "display: flex; gap: .2em"
+          availableEmotesDiv.className = "availableEmotes"
           const emotes = data.availableEmotes
 
           emotes.forEach((emote: string) => {
