@@ -1,47 +1,36 @@
 import { useEffect } from "react";
+import { emoteCache } from './SendForm';
 import './EmojiMenu.css'
 
 type EmojiMenuProps = {
   setMessage: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const EmojiMenu = ({ setMessage }: EmojiMenuProps) => {
+const EmoteMenu = ({ setMessage }: EmojiMenuProps) => {
   useEffect(() => {
-    const fetchEmojis = () => {
-      fetch("/api/emotes")
-        .then(res => res.json())
-        .then(data => {
-          const emojiMenu = document.getElementById('emojiMenu')
-          const availableEmotesDiv = document.createElement('div')
-          availableEmotesDiv.className = "availableEmotes"
-          const emotes = data.availableEmotes
+    const emoteMenu = document.getElementById('emoteMenu')
+    const availableEmotesDiv = document.createElement('div')
+    availableEmotesDiv.className = "availableEmotes"
 
-          emotes.forEach((emote: string) => {
-            const imgEmoteElement: HTMLImageElement = document.createElement('img')
-            imgEmoteElement.src = `/emotes/${emote}`
+    emoteCache.forEach(emote => {
+      const imgEmoteElement: HTMLImageElement = document.createElement('img')
+      imgEmoteElement.src = `/emotes/${emote}`
+      imgEmoteElement.onclick = () => {
+        setMessage((prevMsg) => prevMsg + `:${emote.split(".")[0]}:`)
+      }
+      availableEmotesDiv.appendChild(imgEmoteElement);
+    })
 
-            imgEmoteElement.onclick = () => {
-              setMessage((prevMsg) => prevMsg + `:${emote.split(".")[0]}:`)
-            }
-            
-            availableEmotesDiv.appendChild(imgEmoteElement);
-          })
-
-          if(emojiMenu) emojiMenu.appendChild(availableEmotesDiv)
-
-        })
-    }
-
-    fetchEmojis();
+    if(emoteMenu) emoteMenu.appendChild(availableEmotesDiv)
   }, [])
 
   return (
     <>
-      <div id="emojiMenu">
+      <div id="emoteMenu">
         
       </div>
     </>
   )
 }
 
-export default EmojiMenu;
+export default EmoteMenu;

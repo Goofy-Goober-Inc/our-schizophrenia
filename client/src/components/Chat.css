@@ -4,36 +4,6 @@ section {
   gap: 1em !important;
 }
 
-.send-form {
-  display: flex;
-  flex-direction: row !important;
-  gap: .5em;
-  margin-top: .5em;
-}
-
-.send-form > input {
-  padding: 1em;
-  border-radius: 10px;
-  border: none;
-  flex: 1;
-}
-
-.send-form > button {
-  padding: 1em;
-  border-radius: 10px;
-  border: none;
-  background: #FFC8DD;
-  color: green;
-  font-weight: 900;
-  cursor: pointer;
-  transition: ease-in-out 1000ms;
-}
-
-.send-form > button:hover {
-  transform: rotate(360deg);
-  transition: ease-in-out 1000ms;
-}
-
 #chat {
   width: 500px;
   overflow-y: scroll;
